@@ -1,0 +1,20 @@
+# Config file for the pipeline
+
+# General configuration
+bam_or_fastq: b  # Specify if the input is BAM ('b') or FASTQ ('f')
+reference_nuclear: ""  # Path to the nuclear reference genome
+headers_nuclear: "" # Path to the file containing chromosome reference headers
+threads_minimap2: 24  # Number of threads for Minimap2
+read_type: ONT  # Sequencing platform (e.g., for Oxford Nanopore reads mention ONT; for PacBio reads mention 'pb'; for PacBio HiFi reads mention 'HiFi')
+sample_directory: ""  # Directory containing sample files
+working_directory: ""  # Directory for pipeline output and intermediate files
+
+# Sniffles parameters
+minimum_numt_length: 15
+min_support: 5
+minimum_mapq: 0
+long_ins_length:
+genotype_ploidy: 2
+quiet: True
+allow_overwrite: True
+threads_sniffles: 24
