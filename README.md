@@ -110,4 +110,4 @@ bash path/to/tool/Scripts/prepare_genome_fasta.sh /path/to/mitochondrial/genome/
 
 ## Feedback/Help
 
-If you have any feedback/issues, please contact us at anomaly.help@gmail.com or report the issue via [GitHub](https://github.com/Nirmal2310/ANOMALY/issues).
+If you have any feedback/issues, please report the issue via [GitHub](https://github.com/Nirmal2310/ANOMALY/issues).
