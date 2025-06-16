@@ -167,8 +167,8 @@ def generate_snakemake_rule_inserts(config):
     rule_inserts = f""" 
 rule inserts:
     input:
-    	vcf_file='{working_directory}/vcf_files/{{sample}}_sniffles.vcf.gz',
-     	ref_list='{headers_file}'
+		vcf_file='{working_directory}/vcf_files/{{sample}}_sniffles.vcf.gz',
+ 		ref_list='{headers_file}'
     output:
         '{working_directory}/inserts/{{sample}}_insertions.txt'
     shell:
