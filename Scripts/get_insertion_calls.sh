@@ -53,6 +53,6 @@ while IFS=$'\t' read -r chr start end support; do
      $1==chr && $2>=start && $3<=end && $6==support {
           print $0
      }' "$tmp_insertion_file"
-done < "$tmp_support_file" | awk 'BEGIN{FS="\t";OFS="\t"}{if($4!="<INS>) print $1, $2, $4, $5}' > "$output"
+done < "$tmp_support_file" | awk 'BEGIN{FS="\t";OFS="\t"}{if($4!="<INS>") print $1, $2, $4, $5}' > "$output"
 
 rm -r "$tmp_insertion_file" "$tmp_support_file"
