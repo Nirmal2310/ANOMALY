@@ -12,7 +12,7 @@ data_dir=$(echo "$script_dir" | sed 's/Scripts/DATA/g')
 
 fasta_name=$(basename "$input_fasta")
 
-fasta_concat=$(echo $fasta_name | sed 's/.fa/_concatenated.fa/g;s/.fasta/_concatenated.fa/g;s/.fna/_concatenated.fa/g')
+fasta_concat=$(echo $fasta_name | sed 's/.fa$/_concatenated.fa/g;s/.fasta$/_concatenated.fa/g;s/.fna$/_concatenated.fa/g')
 
 cp "$input_fasta" "$data_dir"/"$fasta_name"
 
