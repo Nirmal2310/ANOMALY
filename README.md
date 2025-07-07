@@ -6,10 +6,10 @@
 - [x] Snakemake pipeline for calling NUMTs from long-read FASTQ files.
 - [x] Support for Multiple Species.
 - [x] Support for both ONT and PacBio Sequencing Data.
-- [x] Visualization of Called NUMTs.
+- [x] Visualisation of Called NUMTs.
 
 ## Installation
-To run the Snakemake pipeline locally, the following tools and database are required:
+To run the Snakemake pipeline locally, the following tools and databases are required:
 
 - [Snakemake](https://snakemake.readthedocs.io/en/stable/) >= 8.26.0
 - [Minimap2](https://academic.oup.com/bioinformatics/article/34/18/3094/4994778) >= 2.28
@@ -26,7 +26,7 @@ The user can install all the required tools and database using the following com
 bash setup.sh && source ~/.bashrc
 ```
 
-#### NOTE: The pipeline is tested in Ubuntu 22.04 and Centos7.
+#### NOTE: The pipeline is tested in Ubuntu 22.04 and CentOS 7.
 
 ## Test Example
 
@@ -38,7 +38,7 @@ bash run_example.sh
 - This script will first download the raw fastq file for the HG001 sample sequenced in PromethION.
 - It will then download the nuclear genome fasta file (GRCh38), followed by Read mapping (Minimap2) and SV calling (Sniffles2).
 - The insertion calls will then be mapped to the concatenated mitochondrial genome to get the putative NUMTs.
-- The supplementary nuclear genome reads aligned to the mitochondrial genome will be utilized to call longer NUMTs missed by SV calling.
+- The supplementary nuclear genome reads aligned to the mitochondrial genome will be utilised to call longer NUMTs missed by SV calling.
 - The final text file will contain insertion-based and supplementary alignment-based NUMTs with overlaps removed, if any.
 
 ## Steps to follow
@@ -51,14 +51,14 @@ bash get_config.sh -d b -r /path/to/reference/fasta -m 24 -s 24 -p ONT -i /path/
 -m: Number of threads to be used for Minimap2. [Default: 24]
 -s: Number of threads to be used for Sniffles. [Default: 24]
 -p: Sequencing Platform (ONT/pb/HiFi). [Default: ONT]
--i: Absolute/Relative path of the directory contains the FASTQ or BAM Files.
+-i: Absolute/Relative path of the directory that contains the FASTQ or BAM Files [Do not pass the FASTQ name].
 -o: Absolute/Relative path of the directory for Pipeline Output and Intermediate Files.
 -l: Absolute/Relative path of the file containing reference chromosome headers. [Default: ref_headers.txt]
 -q: Minimum Map Quality for calling SVs. [default: 0]
 -n: Minimum Support for calling SVs. [default: 5]
 -g: Genotype Ploidy. [default: 2]
 
-# Absolute/Relative Paths of Reference Genome, Input Data, Pipeline Output Directory, and list with reference chromosome headers are Mandatory.
+# Absolute/Relative Paths of Reference Genome, Input Data, Pipeline Output Directory, and a list with reference chromosome headers are Mandatory.
 ```
    
 2. Run the pipeline using SnakeMake:
@@ -90,9 +90,9 @@ bash run_snakemake.sh -w /path/to/working/directory -t 96
 
 The Circos plot illustrates the integration of Nuclear Mitochondrial DNA Sequences (NuMTs) across various chromosomes in the nuclear genome. The outermost circular segments represent individual chromosomes (1–22 and X) and concatenated mitochondrial genome segments (Concat_1 and Concat_2). The curved links in the inner region indicate the insertion events of NUMTs from the mitochondrial genome into nuclear chromosomes.
 
-To visualize the NUMTs containing the control region of the mitochondrial genome, we have utilized the concatenated genome of Mitochondria (shown as Concat_1 and Concat_2). Hence, all the NUMTs containing control regions will be split into two links, one coming from the end of the first mitochondrial segment (Concat_1) and the second coming from the start of the second mitochondrial segment (Concat_2).
+To visualise the NUMTs containing the control region of the mitochondrial genome, we have utilised the concatenated genome of Mitochondria (shown as Concat_1 and Concat_2). Hence, all the NUMTs containing control regions will be split into two links, one coming from the end of the first mitochondrial segment (Concat_1) and the second coming from the start of the second mitochondrial segment (Concat_2).
 
-## Preparing the User Specific Mitochondrial Reference Genome
+## Preparing the User-Specific Mitochondrial Reference Genome
 #### The users can prepare their species of interest's Mitochondrial genome for the tool by using the following steps:
 ```bash
 bash path/to/tool/Scripts/prepare_genome_fasta.sh /path/to/mitochondrial/genome/fasta && source ~/.bashrc
