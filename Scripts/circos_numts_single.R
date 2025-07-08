@@ -127,7 +127,7 @@ if(nrow(chromosome_data)<=12) {
 } else if(nrow(chromosome_data)>12 && nrow(chromosome_data)<=20) {
     nucl_col <- c(brewer.pal(12, "Set3"), brewer.pal(nrow(chromosome_data)-12, "Dark2"))
     names(nucl_col) <- as.character(chromosome_data$Chromosome)
-} else if(nrow(chromosome_data)>20 && nrow(chromosome_data)<=23) {
+} else if(nrow(chromosome_data)>20 && nrow(chromosome_data)<=24) {
     nucl_col <- c(brewer.pal(12, "Set3"), brewer.pal(8, "Dark2"), brewer.pal(nrow(chromosome_data)-20, "Set1"))
     names(nucl_col) <- as.character(chromosome_data$Chromosome)
 }
