@@ -95,6 +95,8 @@ final_data <- final_data %>% mutate(MT_Header = ifelse(MT_Start>mt_length & MT_E
 
 final_data <- as.data.frame(lapply(final_data, unlist))
 
+final_data$Chromosome <- gsub("[C|c]hr", "", final_data$Chromosome)
+
 index_data <- read.delim(file = ref_index, header = FALSE)
 
 index_data <- index_data[,1:2]
@@ -112,6 +114,8 @@ target_headers$Chromosome <- as.character(target_headers$Chromosome)
 target_headers$Chromosome <- stringr::str_sort(as.character(target_headers$Chromosome), numeric=TRUE)
 
 chromosome_data <- inner_join(target_headers, index_data, by = "Chromosome") %>% dplyr::select(c("Chromosome", "Max"))
+
+chromosome_data$Chromosome <- gsub("[C|c]hr", "", chromosome_data$Chromosome)
 
 chromosome_data$Min <- rep(1,nrow(chromosome_data))
 
@@ -133,7 +137,7 @@ if(nrow(chromosome_data)<=12) {
 } else if(nrow(chromosome_data)>12 && nrow(chromosome_data)<=20) {
     nucl_col <- c(brewer.pal(12, "Set3"), brewer.pal(nrow(chromosome_data)-12, "Dark2"))
     names(nucl_col) <- as.character(chromosome_data$Chromosome)
-} else if(nrow(chromosome_data)>20 && nrow(chromosome_data)<=23) {
+} else if(nrow(chromosome_data)>20 && nrow(chromosome_data)<=24) {
     nucl_col <- c(brewer.pal(12, "Set3"), brewer.pal(8, "Dark2"), brewer.pal(nrow(chromosome_data)-20, "Set1"))
     names(nucl_col) <- as.character(chromosome_data$Chromosome)
 }
