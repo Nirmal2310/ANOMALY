@@ -146,15 +146,15 @@ if [ ! -d "$data_dir" ]; then
 
  	mkdir "$data_dir"
 
-	wget https://ftp.ensembl.org/pub/release-113/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.MT.fa.gz -O "$data_dir"/Homo_sapiens.GRCh38.MT.fa.gz
+	wget https://ftp.ensembl.org/pub/release-113/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.chromosome.MT.fa.gz -O "$data_dir"/Homo_sapiens.GRCh38.MT.fasta.gz
 
-	gunzip "$data_dir/"Homo_sapiens.GRCh38.MT.fa.gz
+	gunzip "$data_dir/"Homo_sapiens.GRCh38.MT.fasta.gz
 
  	source $path/bin/activate blast
 
-  	seqkit concat -w 0 -t DNA "$data_dir"/Homo_sapiens.GRCh38.MT.fa "$data_dir"/Homo_sapiens.GRCh38.MT.fa > "$data_dir"/Homo_sapiens.GRCh38.MT_concatenated.fa
+  	seqkit concat -w 0 -t DNA "$data_dir"/Homo_sapiens.GRCh38.MT.fasta "$data_dir"/Homo_sapiens.GRCh38.MT.fasta > "$data_dir"/Homo_sapiens.GRCh38.MT_concatenated.fasta
 
-	makeblastdb -in "$data_dir"/Homo_sapiens.GRCh38.MT_concatenated.fa -parse_seqids -blastdb_version 5 -title Homo_sapiens.GRCh38.MT_concatenated.fa -dbtype nucl -out "$data_dir"/Homo_sapiens.GRCh38.MT_concatenated.fa
+	makeblastdb -in "$data_dir"/Homo_sapiens.GRCh38.MT_concatenated.fasta -parse_seqids -blastdb_version 5 -title Homo_sapiens.GRCh38.MT_concatenated.fasta -dbtype nucl -out "$data_dir"/Homo_sapiens.GRCh38.MT_concatenated.fasta
 
 	source ~/.bashrc
 
@@ -164,4 +164,4 @@ if [ ! -d "$data_dir" ]; then
 	
 fi
 
-grep -qF "export MT_DATA=\"$data_dir/Homo_sapiens.GRCh38.MT_concatenated.fa\"" ~/.bashrc || echo "export MT_DATA=\"$data_dir/Homo_sapiens.GRCh38.MT_concatenated.fa\"" >> ~/.bashrc && source ~/.bashrc
+grep -qF "export MT_DATA=\"$data_dir/Homo_sapiens.GRCh38.MT_concatenated.fasta\"" ~/.bashrc || echo "export MT_DATA=\"$data_dir/Homo_sapiens.GRCh38.MT_concatenated.fasta\"" >> ~/.bashrc && source ~/.bashrc
