@@ -111,7 +111,7 @@ rule alignment:
     output:
         "{working_directory}/bam_files/{{sample}}.bam"
     conda:
-        "{path}/envs/minimap2"
+        "{path}/envs/anomaly"
     resources: 
         mem_mb=180000
     shell:
@@ -135,7 +135,7 @@ rule sniffles:
     input:"{sample_folder}/{{sample}}.bam"
     output:"{working_directory}/vcf_files/{{sample}}_sniffles.vcf.gz"
     log:"{working_directory}/vcf_files/{{sample}}_sniffles.log"
-    conda:"{path}/envs/sniffles"
+    conda:"{path}/envs/anomaly"
     threads: {threads}
     resources: mem_mb=180000
     shell:
@@ -150,7 +150,7 @@ rule sniffles:
     input:"{working_directory}/bam_files/{{sample}}.bam"
     output:"{working_directory}/vcf_files/{{sample}}_sniffles.vcf.gz"
     log:"{working_directory}/vcf_files/{{sample}}_sniffles.log"
-    conda:"{path}/envs/sniffles"
+    conda:"{path}/envs/anomaly"
     threads: {threads}
     resources: mem_mb=180000
     shell:
@@ -204,7 +204,7 @@ rule inserts_blast:
     
     output:'{working_directory}/filtered/{{sample}}_blast_result_filtered.txt'
     threads: 16
-    conda: "{path}/envs/blast"
+    conda: "{path}/envs/anomaly"
     shell:
         '''
         bash \"{current_path}/Scripts/blast_run.sh\" {{input.fasta_file}} {{output}} {{threads}} {{input.ref_list}}
@@ -220,7 +220,7 @@ rule inserts_numt_concat:
 
     output:'{working_directory}/NUMTs/{{sample}}_concatenated_numts.txt'
 
-    conda: "{path}/envs/bedtools"
+    conda: "{path}/envs/anomaly"
 
     shell:
         '''
@@ -353,7 +353,7 @@ rule combined_circos_numts:
         svg_out="{working_directory}/Results/cohort_numt_circos_plot.svg",
         png_out="{working_directory}/Results/cohort_numt_circos_plot.png"
     
-    conda: "{path}/envs/renv"
+    conda: "{path}/envs/anomaly"
     
     shell:
         '''
