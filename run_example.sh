@@ -18,6 +18,8 @@ conda activate seqkit
 
 seqkit replace -p '^(\S+)(.+?)$' -r '{kv}' -k header_pairs.txt Example/genome.fasta > temp && mv temp Example/genome.fasta
 
+conda activate base
+
 if [ ! -f Example/chr_list.txt ]; then
         for x in {1..22..1}; do echo $x; done | cat - <(echo -e "X\nY") > Example/chr_list.txt
 fi
