@@ -26,7 +26,7 @@ trap 'rm -f "$tmp_file"' EXIT
 # Set up conda environment
 CONDA_BASE=$(conda info --base)
 
-source "${CONDA_BASE}/bin/activate" bedtools
+source "${CONDA_BASE}/bin/activate" anomaly
 
 # Function to process coordinates and find overlapping regions
 process_coordinates() {
