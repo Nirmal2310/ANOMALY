@@ -67,8 +67,6 @@ if [ ! -f "$ref_genome_index" ]; then
     
     samtools faidx "$ref_genome_full"
 
-    source $conda_path/bin/activate base
-
 fi
 
 source $conda_path/bin/activate anomaly
