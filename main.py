@@ -196,27 +196,33 @@ rule get_inserts_fasta:
 def generate_snakemake_rule_inserts_blast(config):
     working_directory = config.get("working_directory")
     headers_file = config.get("headers_nuclear", "chr_headers.txt")
+    evalue_cutoff = config.get("evalue_cutoff")
+    threads = config.get("threads_sniffles", 24)
     rule_inserts_blast = f"""
 rule inserts_blast:
     input: 
         fasta_file="{working_directory}/fasta_files/{{sample}}_inserts.fasta",
-        ref_list="{headers_file}"
+        ref_list="{headers_file}",
+        evalue_cutoff="{evalue_cutoff}",
     
     output:'{working_directory}/filtered/{{sample}}_blast_result_filtered.txt'
-    threads: 16
+    threads: {threads}
     conda: "{path}/envs/anomaly"
     shell:
         '''
-        bash \"{current_path}/Scripts/blast_run.sh\" {{input.fasta_file}} {{output}} {{threads}} {{input.ref_list}}
+        bash \"{current_path}/Scripts/blast_run.sh\" {{input.fasta_file}} {{output}} {{threads}} {{input.ref_list}} {{input.evalue_cutoff}}
         '''
     """
     return rule_inserts_blast
 
 def generate_snakemake_rule_inserts_numt_concat(config):
     working_directory = config.get("working_directory")
+    coverage_cutoff = config.get("numt_coverage")
     rule_inserts_numt_concat = f"""
 rule inserts_numt_concat:
-    input: '{working_directory}/filtered/{{sample}}_blast_result_filtered.txt'
+    input: 
+        filtered_file='{working_directory}/filtered/{{sample}}_blast_result_filtered.txt',
+        coverage_cutoff='{coverage_cutoff}',
 
     output:'{working_directory}/NUMTs/{{sample}}_concatenated_numts.txt'
 
@@ -224,7 +230,7 @@ rule inserts_numt_concat:
 
     shell:
         '''
-        bash \"{current_path}/Scripts/numt_concat.sh\" {{input}} {{output}}
+        bash \"{current_path}/Scripts/numt_concat.sh\" {{input.filtered_file}} {{output}} {{input.coverage_cutoff}}
         '''
     """
     return rule_inserts_numt_concat
@@ -269,16 +275,19 @@ rule get_supplementary_alignments:
 def generate_snakemake_rule_potential_numts_from_sa(config):
     working_directory = config.get("working_directory")
     threads = config.get("threads_sniffles",24)
+    supporting_reads = config.get("numt_supporting_reads")
     rule_potential_numts_from_sa = f"""
 rule potential_numts_from_sa:
-    input: "{working_directory}/SA_Data/{{sample}}_MT_SA.bam"
+    input: 
+        supplementary_file="{working_directory}/SA_Data/{{sample}}_MT_SA.bam",
+        reads_cutoff="{supporting_reads}"
     output: 
         sa_calls="{working_directory}/filtered/{{sample}}_MT_SA_calls.txt",
         potential_numts="{working_directory}/filtered/{{sample}}_potential_numts_from_sa.txt"
     threads: {threads}
     shell:
         '''
-        bash \"{current_path}/Scripts/get_potential_numts_from_sa.sh\" {{input}} {{output.sa_calls}} {{output.potential_numts}} {{threads}}
+        bash \"{current_path}/Scripts/get_potential_numts_from_sa.sh\" {{input.supplementary_file}} {{output.sa_calls}} {{output.potential_numts}} {{threads}} {{input.reads_cutoff}}
         '''
     """
     return rule_potential_numts_from_sa

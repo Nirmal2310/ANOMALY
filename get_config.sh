@@ -14,6 +14,9 @@ helpFunction()
    echo -e "\t-q <int> Minimum Map Quality for calling SVs. [default: 0]"
    echo -e "\t-n <int> Minimum Support for calling SVs. [default: 5]"
    echo -e "\t-g <int> Genotype Ploidy. [default: 2]"
+   echo -e "\t-e <int> Blast E-value Cutoff. [default: 1e-3]"
+   echo -e "\t-c <int> NUMT Coverage Cutoff. [default: 70]"
+   echo -e "\t-a <int> Minimum Support for calling NUMTs from Supplementary Alignments. [default: 5]"
    exit 1 # Exit script after printing help
 }
 
@@ -33,9 +36,15 @@ mins=4
 
 ploidy=2
 
+evalue_cutoff=1e-3
+
+coverage=70
+
+support=5
 
 
-while getopts "d:r:m:s:p:i:o:l:q:n:g:" opt
+
+while getopts "d:r:m:s:p:i:o:l:q:n:g:e:c:a:" opt
 do
 	case "$opt" in
 	d )
@@ -70,6 +79,15 @@ do
 		;;
 	g )
 		ploidy="$OPTARG"
+		;;
+	e )
+		evalue_cutoff="$OPTARG"
+		;;
+	c )
+		coverage="$OPTARG"
+		;;
+	a )
+		support="$OPTARG"
 		;;
 	? )	helpFunction ;;
 	esac
@@ -110,4 +128,9 @@ genotype_ploidy: $ploidy
 quiet: True
 allow_overwrite: False
 threads_sniffles: $threads_s
+
+# Other parameters
+evalue_cutoff: $evalue_cutoff
+numt_coverage: $coverage
+numt_supporting_reads: $support
 EOF

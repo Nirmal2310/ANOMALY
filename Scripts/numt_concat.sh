@@ -6,14 +6,16 @@
 set -euo pipefail
 
 # Input validation
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <input_bed> <output_bed>"
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <input_bed> <output_bed> <coverage_cutoff>"
     exit 1
 fi
 
 input="$1"
 
 output="$2"
+
+coverage_cutoff="$3"
 
 tmp_file=$(mktemp)
 
@@ -39,6 +41,7 @@ process_freq_6() {
     local start="$3"
     local end="$4"
     local mt_length="$5"
+    local coverage_cutoff="$6"
     tmp_file_2=$(mktemp)
     passed_calls=$(mktemp)
 
@@ -58,7 +61,7 @@ process_freq_6() {
         }
     }' | sort -k8 -n | uniq > "$tmp_file_2"
 
-    awk -F "\t" '{if(($8*100/$7)>=70) print $0}' "$tmp_file_2" > "$passed_calls"
+    awk -F "\t" -v coverage_cutoff="$coverage_cutoff" '{if(($8*100/$7)>=coverage_cutoff) print $0}' "$tmp_file_2" > "$passed_calls"
 
     if [ -s "$passed_calls" ]; then
        lines=$(cat "$passed_calls" | wc -l)
@@ -80,6 +83,7 @@ process_freq_4() {
     local start="$3"
     local end="$4"
     local mt_length="$5"
+    local coverage_cutoff="$6"
     tmp_file_2=$(mktemp)
     passed_calls=$(mktemp)
 
@@ -100,7 +104,7 @@ process_freq_4() {
         }
     }' | sort -k8 -n | uniq > "$tmp_file_2"
 
-    awk -F "\t" '{if(($8*100/$7)>=70) print $0}' "$tmp_file_2" > "$passed_calls"
+    awk -F "\t" -v coverage_cutoff="$coverage_cutoff" '{if(($8*100/$7)>=coverage_cutoff) print $0}' "$tmp_file_2" > "$passed_calls"
 
     if [ -s "$passed_calls" ]; then
         lines=$(cat "$passed_calls" | wc -l)
@@ -218,6 +222,7 @@ process_other_freq() {
     local start="$3"
     local end="$4"
     local mt_length="$5"
+    local coverage_cutoff="$6"
     tmp_file_2=$(mktemp)
     passed_calls=$(mktemp)
 
@@ -235,7 +240,7 @@ process_other_freq() {
         }
     }' | sort -k8 -n | uniq > "$tmp_file_2"
 
-    awk -F "\t" '{if(($8*100/$7)>=70) print $0}' "$tmp_file_2" > "$passed_calls"
+    awk -F "\t" -v coverage_cutoff="$coverage_cutoff" '{if(($8*100/$7)>=coverage_cutoff) print $0}' "$tmp_file_2" > "$passed_calls"
 
     if [ -s "$passed_calls" ]; then
         lines=$(cat "$passed_calls" | wc -l)
@@ -256,11 +261,11 @@ concat_numt() {
     while IFS=$'\t' read -r chr start end freq; do
         case "$freq" in
             6)
-                process_freq_6 "$1" "$chr" "$start" "$end" "$3"
+                process_freq_6 "$1" "$chr" "$start" "$end" "$3" "$4"
                 ;;
             
             4)
-                process_freq_4 "$1" "$chr" "$start" "$end" "$3"
+                process_freq_4 "$1" "$chr" "$start" "$end" "$3" "$4"
                 ;;
             3)
                 process_freq_3 "$1" "$chr" "$start" "$end" "$3"
@@ -270,7 +275,7 @@ concat_numt() {
                 ;;
             *)
                 if [ "$freq" -gt 3 ] && [ "$freq" -ne 4 ] && [ "$freq" -ne 6 ]; then
-                    process_other_freq "$1" "$chr" "$start" "$end" "$3"
+                    process_other_freq "$1" "$chr" "$start" "$end" "$3" "$4"
                 fi
                 ;;
         esac
@@ -282,9 +287,9 @@ if [ -s "$input" ]; then
     
     get_freq "$input" > "$tmp_file"
     
-    concat_numt "$input" "$tmp_file" "$mt_length" \
-    | awk 'BEGIN{FS="\t";OFS="\t"} {
-        if(($8*100)/$7 >= 70) print $1,$2,$3,$4,$5,$6
+    concat_numt "$input" "$tmp_file" "$mt_length" "$coverage_cutoff" \
+    | awk -v coverage_cutoff="$coverage_cutoff" 'BEGIN{FS="\t";OFS="\t"} {
+        if(($8*100)/$7 >= coverage_cutoff) print $1,$2,$3,$4,$5,$6
     }' | awk -v mt_len="$mt_length" 'BEGIN{FS=OFS="\t"} {
         if($6>mt_len) {
             print $1, $2, $3, $4, $5, $6-mt_len, "With Control"

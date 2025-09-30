@@ -6,8 +6,8 @@
 set -euo pipefail
 
 # Input validation
-if [ "$#" -ne 4 ]; then
-    echo "Usage: $0 <input_bam> <intermediate_output> <final_output> <threads>"
+if [ "$#" -ne 5 ]; then
+    echo "Usage: $0 <input_bam> <intermediate_output> <final_output> <threads> <supporting_reads>"
     exit 1
 fi
 
@@ -16,6 +16,7 @@ BAM_FILE="$1"
 OUT_FILE="$2"
 TARGET_FILE="$3"
 THREADS="$4"
+SUPPORTING_READS="$5"
 
 # Conda environment setup
 CONDA_BASE=$(conda info --base)
@@ -65,7 +66,7 @@ extract_values() {
 
 num_line=$(sambamba view "$BAM_FILE" | wc -l)
 
-if [ "$num_line" -gt 4 ]; then
+if [ "$num_line" -gt 2 ]; then
     sambamba view -t "$THREADS" "$BAM_FILE" \
         | awk 'BEGIN {FS=OFS="\t"} {
             for (i=1; i<=NF; i++) {
@@ -90,7 +91,7 @@ if [ "$num_line" -gt 4 ]; then
 
     awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$2,$3,$4}' "$OUT_FILE" | sort -k1 -n | uniq | sortBed \
         | bedtools merge -d 50 -i stdin -c 4 -o count \
-        | awk 'BEGIN {FS=OFS="\t"} {if ($4 >= 5) print $1, $2, $3}' \
+        | awk -v read_cutoff="$SUPPORTING_READS" 'BEGIN {FS=OFS="\t"} {if ($4 >= read_cutoff) print $1, $2, $3}' \
         > "$TARGET_FILE"
 
     echo "Processing complete. Results written to $TARGET_FILE"

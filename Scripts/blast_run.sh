@@ -7,8 +7,6 @@ set -euo pipefail
 
 WORD_SIZE=7
 
-FINAL_EVALUE_CUTOFF=1e-3
-
 # Function to display usage information
 usage() {
     cat << EOF
@@ -36,6 +34,7 @@ validate_inputs() {
     local output=$2
     local threads=$3
     local chr_list=$4
+    local final_evalue_cutoff=$5
 
     # Check if the input file exists
     
@@ -68,6 +67,7 @@ run_blast_pipeline() {
     local output=$2
     local threads=$3
     local chr_list=$4
+    local final_evalue_cutoff=$5
 
     # Run BLAST and filter results
     blastn -task blastn \
@@ -76,7 +76,7 @@ run_blast_pipeline() {
            -query "$input" \
            -num_threads "$threads" -max_target_seqs 6 -max_hsps 6 \
            -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue" | \
-    awk -v evalue_cutoff="$FINAL_EVALUE_CUTOFF" '
+    awk -v evalue_cutoff="$final_evalue_cutoff" '
     BEGIN {
         FS=OFS="\t"
     }
@@ -115,7 +115,7 @@ run_blast_pipeline() {
 # Main script execution
 main() {
     # Check for the correct number of arguments
-    if [ $# -ne 4 ]; then
+    if [ $# -ne 5 ]; then
         usage
     fi
 
@@ -123,12 +123,13 @@ main() {
     local out_data=$2
     local threads=$3
     local chr_list=$4
+    local final_evalue_cutoff=$5
 
     # Validate inputs
-    validate_inputs "$input_fasta" "$out_data" "$threads" "$chr_list"
+    validate_inputs "$input_fasta" "$out_data" "$threads" "$chr_list" "$final_evalue_cutoff"
 
     # Run BLAST pipeline
-    run_blast_pipeline "$input_fasta" "$out_data" "$threads" "$chr_list"
+    run_blast_pipeline "$input_fasta" "$out_data" "$threads" "$chr_list" "$final_evalue_cutoff"
 }
 
 # Execute main function with all arguments
