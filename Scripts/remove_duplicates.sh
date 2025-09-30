@@ -27,7 +27,7 @@ done
 
 path=$(conda info --base)
 
-source "$path"/bin/activate bedtools
+source "$path"/bin/activate anomaly
 
 if [ -s "$ins_numt" ] || [ -s "$sa_numt" ]; then
     cat "$ins_numt" "$sa_numt" | sortBed \
