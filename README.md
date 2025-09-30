@@ -42,8 +42,8 @@ The pipeline can be tested using the following script:
 ```bash
 bash run_example.sh
 ```
-- This script will first download the raw fastq file for the HG001 sample sequenced in PromethION.
-- It will then download the nuclear genome fasta file (GRCh38), followed by Read mapping (Minimap2) and SV calling (Sniffles2).
+- This script will first download the raw fastq file of simulated data from human chromosome 22 with known NuMT insertions.
+- It will then download the nuclear genome fasta file (CHM13), followed by Read mapping (Minimap2) and SV calling (Sniffles2).
 - The insertion calls will then be mapped to the concatenated mitochondrial genome to get the putative NUMTs.
 - The supplementary nuclear genome reads aligned to the mitochondrial genome will be utilised to call longer NUMTs missed by SV calling.
 - The final text file will contain insertion-based and supplementary alignment-based NUMTs with overlaps removed, if any.
