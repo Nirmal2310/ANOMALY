@@ -63,7 +63,7 @@ conda_path=$(conda info --base)
 
 if [ ! -f "$ref_genome_index" ]; then
     
-    source $conda_path/bin/activate minimap2
+    source $conda_path/bin/activate anomaly
     
     samtools faidx "$ref_genome_full"
 
@@ -71,6 +71,6 @@ if [ ! -f "$ref_genome_index" ]; then
 
 fi
 
-source $conda_path/bin/activate renv
+source $conda_path/bin/activate anomaly
 
 Rscript "$script_path"/circos_numts_single.R -i "$input" -s "$svg" -p "$png" -r "$ref_headers_full" -f "$ref_genome_index" -l "$mt_length"
