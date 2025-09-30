@@ -20,7 +20,7 @@ THREADS="$4"
 # Conda environment setup
 CONDA_BASE=$(conda info --base)
 
-source "${CONDA_BASE}/bin/activate" minimap2
+source "${CONDA_BASE}/bin/activate" anomaly
 
 # Function to process CIGAR strings
 process_cigar() {
@@ -87,9 +87,6 @@ if [ "$num_line" -gt 4 ]; then
         | process_cigar \
         | extract_values \
         > "$OUT_FILE"
-
-    # Activate bedtools environment and process final output
-    source "${CONDA_BASE}/bin/activate" bedtools
 
     awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$2,$3,$4}' "$OUT_FILE" | sort -k1 -n | uniq | sortBed \
         | bedtools merge -d 50 -i stdin -c 4 -o count \
