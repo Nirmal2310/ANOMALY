@@ -10,7 +10,7 @@ chr_list=$4
 
 path=$(conda info --base)
 
-source $path/bin/activate minimap2
+source $path/bin/activate anomaly
 
 sambamba view -t $threads $bam_file | \
     rg -j $threads -P 'SA:Z:(?:[^;]*;)*MT,' | \
