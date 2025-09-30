@@ -26,7 +26,7 @@ fi
 
 bash get_config.sh -d f -r $PWD/Example/genome.fasta -m 24 -s 24 -p ONT -i $PWD/Example -o $PWD/Example -l $PWD/Example/chr_list.txt
 
-conda activate anomaly
+conda activate snakemake
 
 python main.py -c $PWD/Example/snake_config.yml
 

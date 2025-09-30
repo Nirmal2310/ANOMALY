@@ -36,7 +36,7 @@ cwd=$(dirname "$(readlink -f "$0")")
 
 workdir_full=$(realpath "$workdir")
 
-source $path/bin/activate anomaly
+source $path/bin/activate snakemake
 
 cd "$workdir_full" || exit
 

@@ -50,6 +50,24 @@ else
 
 fi
 
+if { conda env list |  grep -w "snakemake"; } > /dev/null 2>&1; then
+
+        conda list -n snakemake --explicit > _current_env.txt
+
+        if diff -q $script_dir/Envs/snakemake.txt _current_env.txt > /dev/null; then
+                echo "Environment exists and up to date." && rm -r _current_env.txt
+        else
+                conda create --name snakemake --file $script_dir/Envs/snakemake.txt -y && rm -r _current_env.txt
+                conda list -n snakemake --explicit > $script_dir/Envs/snakemake.txt
+        fi
+
+else
+
+        conda create --name snakemake --file $script_dir/Envs/snakemake.txt
+        conda list -n snakemake --explicit > $script_dir/Envs/snakemake.txt
+
+fi
+
 ## Creating the BLASTn Index For Mitochondrial Genome
 
 if [ ! -d "$data_dir" ]; then
