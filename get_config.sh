@@ -2,11 +2,11 @@
 
 helpFunction()
 {
-   echo -e "Usage: get_config.sh [-d b] [-r reference.fasta] [-m 24] [-s 24] [-p ONT] [-i input directory] [-o output directory] [-l reference headers list]\n[-q Minimum Mapping Quality] [-n Minimum Read Support for SV] [-g Genotype Ploidy]"
+   echo -e "Usage: get_config.sh [-d b] [-r reference.fasta] [-m 16] [-s 16] [-p ONT] [-i input directory] [-o output directory] [-l reference headers list]\n[-q Minimum Mapping Quality] [-n Minimum Read Support for SV] [-g Genotype Ploidy]"
    echo -e "\t-d <string> Specify if Input is BAM ('b') or FASTQ ('f'). [default: b]"
    echo -e "\t-r <filename> Name of the Reference Nuclear Genome Fasta File (Include the Path if the fasta file is not in the same directory)"
-   echo -e "\t-m <int> Number of threads to be used for Minimap2. [default: 24]"
-   echo -e "\t-s <int> Number of threads for Sniffles. [default: 24]"
+   echo -e "\t-m <int> Number of threads to be used for Minimap2. [default: 16]"
+   echo -e "\t-s <int> Number of threads for Sniffles. [default: 16]"
    echo -e "\t-p <string> Sequencing Platform (ONT/pb/HiFi). [default: ONT]"
    echo -e "\t-i <path> Absolute Path containing the FASTQ or BAM Files."
    echo -e "\t-o <path> Absolute Path for Pipeline Output and Intermediate Files."
@@ -24,9 +24,9 @@ helpFunction()
 
 data=b
 
-threads_m=24
+threads_m=16
 
-threads_s=24
+threads_s=16
 
 platform=ONT
 

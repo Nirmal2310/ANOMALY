@@ -25,7 +25,7 @@ current_path=os.path.abspath(os.getcwd())
 def generate_alignment_shell_script(config):
     alignment_mode = config.get("read_type", "None")
     reference_file = config.get("reference_nuclear", "ref.fa")
-    threads = config.get("threads_minimap2", 24)
+    threads = config.get("threads_minimap2", 16)
     if alignment_mode == "ONT":
         mode = "map-ont"
     elif alignment_mode == "HiFi":
@@ -63,8 +63,8 @@ def generate_sniffle_shell_script(config):
     genotype_ploidy = config.get("genotype_ploidy", 2)
     quiet = config.get("quiet", False)
     allow_overwrite = config.get("allow_overwrite", False)
-    threads_sniffles = config.get("threads_sniffles", 24)
-    threads = threads_sniffles if threads_sniffles else config.get("threads", 24)
+    threads_sniffles = config.get("threads_sniffles", 16)
+    threads = threads_sniffles if threads_sniffles else config.get("threads", 16)
     min_support = min_support if min_support else config.get("min_support", None)
     # Collect command-line arguments
     param_string = []
@@ -127,7 +127,7 @@ def generate_snakemake_rule_sniffles(config):
     bam_or_fastq = config.get("bam_or_fastq")
     sample_folder = config.get("sample_directory")
     working_directory = config.get("working_directory")
-    threads = config.get("threads_sniffles",6)
+    threads = config.get("threads_sniffles", 16)
 
     if bam_or_fastq == 'b':
         rule_sniffles = f"""
@@ -197,7 +197,7 @@ def generate_snakemake_rule_inserts_blast(config):
     working_directory = config.get("working_directory")
     headers_file = config.get("headers_nuclear", "chr_headers.txt")
     evalue_cutoff = config.get("evalue_cutoff")
-    threads = config.get("threads_sniffles", 24)
+    threads = config.get("threads_sniffles", 16)
     rule_inserts_blast = f"""
 rule inserts_blast:
     input: 
@@ -242,7 +242,7 @@ def generate_snakemake_rule_get_supplementary_alignments(config):
     working_directory = config.get("working_directory")
     bam_or_fastq = config.get("bam_or_fastq")
     sample_directory = config.get("sample_directory")
-    threads = config.get("threads_sniffles",24)
+    threads = config.get("threads_sniffles",16)
     headers_file = config.get("headers_nuclear", "chr_headers.txt")
 
     if bam_or_fastq == 'b':
@@ -277,7 +277,7 @@ rule get_supplementary_alignments:
 
 def generate_snakemake_rule_potential_numts_from_sa(config):
     working_directory = config.get("working_directory")
-    threads = config.get("threads_sniffles",24)
+    threads = config.get("threads_sniffles",16)
     supporting_reads = config.get("numt_supporting_reads")
     rule_potential_numts_from_sa = f"""
 rule potential_numts_from_sa:
