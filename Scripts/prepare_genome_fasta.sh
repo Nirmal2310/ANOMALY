@@ -16,7 +16,7 @@ fasta_concat=$(echo $fasta_name | sed 's/.fa$/_concatenated.fa/g;s/.fasta$/_conc
 
 cp "$input_fasta" "$data_dir"/"$fasta_name"
 
-source $path/bin/activate blast
+source $path/bin/activate anomaly
 
 cd "$data_dir"
 
