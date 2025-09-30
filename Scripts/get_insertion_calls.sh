@@ -9,7 +9,7 @@ fi
 
 CONDA_BASE=$(conda info --base)
 
-source "${CONDA_BASE}/bin/activate" bedtools
+source "${CONDA_BASE}/bin/activate" anomaly
 
 input="$1"
 
