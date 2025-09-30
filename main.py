@@ -203,14 +203,15 @@ rule inserts_blast:
     input: 
         fasta_file="{working_directory}/fasta_files/{{sample}}_inserts.fasta",
         ref_list="{headers_file}",
-        evalue_cutoff="{evalue_cutoff}",
     
     output:'{working_directory}/filtered/{{sample}}_blast_result_filtered.txt'
     threads: {threads}
+    params:
+        evalue_cutoff={evalue_cutoff}
     conda: "{path}/envs/anomaly"
     shell:
         '''
-        bash \"{current_path}/Scripts/blast_run.sh\" {{input.fasta_file}} {{output}} {{threads}} {{input.ref_list}} {{input.evalue_cutoff}}
+        bash \"{current_path}/Scripts/blast_run.sh\" {{input.fasta_file}} {{output}} {{threads}} {{input.ref_list}} {{params.evalue_cutoff}}
         '''
     """
     return rule_inserts_blast
@@ -221,16 +222,18 @@ def generate_snakemake_rule_inserts_numt_concat(config):
     rule_inserts_numt_concat = f"""
 rule inserts_numt_concat:
     input: 
-        filtered_file='{working_directory}/filtered/{{sample}}_blast_result_filtered.txt',
-        coverage_cutoff='{coverage_cutoff}',
+        filtered_file='{working_directory}/filtered/{{sample}}_blast_result_filtered.txt'
 
     output:'{working_directory}/NUMTs/{{sample}}_concatenated_numts.txt'
 
     conda: "{path}/envs/anomaly"
 
+    params:
+        coverage_cutoff={coverage_cutoff}
+
     shell:
         '''
-        bash \"{current_path}/Scripts/numt_concat.sh\" {{input.filtered_file}} {{output}} {{input.coverage_cutoff}}
+        bash \"{current_path}/Scripts/numt_concat.sh\" {{input.filtered_file}} {{output}} {{params.coverage_cutoff}}
         '''
     """
     return rule_inserts_numt_concat
@@ -279,15 +282,16 @@ def generate_snakemake_rule_potential_numts_from_sa(config):
     rule_potential_numts_from_sa = f"""
 rule potential_numts_from_sa:
     input: 
-        supplementary_file="{working_directory}/SA_Data/{{sample}}_MT_SA.bam",
-        reads_cutoff="{supporting_reads}"
+        data="{working_directory}/SA_Data/{{sample}}_MT_SA.bam",
     output: 
         sa_calls="{working_directory}/filtered/{{sample}}_MT_SA_calls.txt",
         potential_numts="{working_directory}/filtered/{{sample}}_potential_numts_from_sa.txt"
     threads: {threads}
+    params:
+        read_cutoff={supporting_reads}
     shell:
         '''
-        bash \"{current_path}/Scripts/get_potential_numts_from_sa.sh\" {{input.supplementary_file}} {{output.sa_calls}} {{output.potential_numts}} {{threads}} {{input.reads_cutoff}}
+        bash \"{current_path}/Scripts/get_potential_numts_from_sa.sh\" {{input.data}} {{output.sa_calls}} {{output.potential_numts}} {{threads}} {{params.read_cutoff}}
         '''
     """
     return rule_potential_numts_from_sa
