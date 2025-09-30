@@ -24,7 +24,7 @@ if [ ! -f Example/chr_list.txt ]; then
         for x in {1..22..1}; do echo $x; done | cat - <(echo -e "X\nY") > Example/chr_list.txt
 fi
 
-bash get_config.sh -d f -r $PWD/Example/genome.fasta -m 24 -s 24 -p ONT -i $PWD/Example -o $PWD/Example -l $PWD/Example/chr_list.txt
+bash get_config.sh -d f -r $PWD/Example/genome.fasta -m 16 -s 16 -p ONT -i $PWD/Example -o $PWD/Example -l $PWD/Example/chr_list.txt
 
 conda activate snakemake
 
