@@ -8,6 +8,8 @@ helpFunction()
         exit 1
 }
 
+threads=48
+
 while getopts "w:t:" opt
 do
         case "$opt" in
@@ -20,8 +22,6 @@ do
         ? )     helpFunction ;;
         esac
 done
-
-threads=48
 
 if [ -z "$workdir" ]
         then
