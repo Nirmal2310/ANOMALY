@@ -52,17 +52,17 @@ bash run_example.sh
 1. Create the Snakemake Config file:
 
 ```bash
-bash get_config.sh -d b -r /path/to/reference/fasta -m 24 -s 24 -p ONT -i /path/to/input/directory -o /path/to/output/directory -l /path/to/headers/list -q Minimum Mapping Quality -n Minimum Read Support for SV -g Genotype Ploidy
+bash get_config.sh -d b -r /path/to/reference/fasta -m 16 -s 16 -p ONT -i /path/to/input/directory -o /path/to/output/directory -l /path/to/headers/list -q Minimum Mapping Quality -n Minimum Read Support for SV -g Genotype Ploidy
 -d: Specify the Input type (BAM 'b' or FASTQ 'f'). [Default: b]
 -r: Absolute/Relative path of Reference Nuclear Genome FASTA file.
--m: Number of threads to be used for Minimap2. [Default: 24]
--s: Number of threads to be used for Sniffles. [Default: 24]
+-m: Number of threads to be used for Minimap2. [Default: 16]
+-s: Number of threads to be used for Sniffles. [Default: 16]
 -p: Sequencing Platform (ONT/pb/HiFi). [Default: ONT]
 -i: Absolute/Relative path of the directory that contains the FASTQ or BAM Files [Do not pass the FASTQ name].
 -o: Absolute/Relative path of the directory for Pipeline Output and Intermediate Files.
 -l: Absolute/Relative path of the file containing reference chromosome headers. [Default: ref_headers.txt]
 -q: Minimum Map Quality for calling SVs. [default: 0]
--n: Minimum Support for calling SVs. [default: 5]
+-n: Minimum Support for calling SVs. [default: 4]
 -g: Genotype Ploidy. [default: 2]
 
 # Absolute/Relative Paths of Reference Genome, Input Data, Pipeline Output Directory, and a list with reference chromosome headers are Mandatory.
