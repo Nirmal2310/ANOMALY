@@ -114,6 +114,8 @@ rule alignment:
         "{path}/envs/anomaly"
     resources: 
         mem_mb=180000
+    benchmark:
+        "{working_directory}/bam_files/{{sample}}.mapping.benchmark.txt"
     shell:
         \"\"\"
         #!/bin/bash
@@ -138,6 +140,8 @@ rule sniffles:
     conda:"{path}/envs/anomaly"
     threads: {threads}
     resources: mem_mb=180000
+    benchmark:
+        "{working_directory}/vcf_files/{{sample}}.sniffles.benchmark.txt"
     shell:
         \"\"\"
         #!/bin/bash
@@ -153,6 +157,8 @@ rule sniffles:
     conda:"{path}/envs/anomaly"
     threads: {threads}
     resources: mem_mb=180000
+    benchmark:
+        "{working_directory}/vcf_files/{{sample}}.sniffles.benchmark.txt"
     shell:
         \"\"\"
         #!/bin/bash
@@ -171,6 +177,8 @@ rule inserts:
         ref_list='{headers_file}'
     output:
         '{working_directory}/inserts/{{sample}}_insertions.txt'
+    benchmark:
+        "{working_directory}/inserts/{{sample}}.get_inserts.benchmark.txt"
     shell:
         \"\"\"
         bash \"{current_path}/Scripts/get_insertion_calls.sh\" {{input.vcf_file}} {{output}} {{input.ref_list}}
@@ -186,6 +194,8 @@ rule get_inserts_fasta:
         '{working_directory}/inserts/{{sample}}_insertions.txt'
     output:
         '{working_directory}/fasta_files/{{sample}}_inserts.fasta'
+    benchmark:
+        "{working_directory}/fasta_files/{{sample}}.create_inserts_fasta.benchmark.txt"
     shell:
         '''
         bash \"{current_path}/Scripts/make_inserts_fasta.sh\" {{input}} {{output}}
@@ -209,6 +219,8 @@ rule inserts_blast:
     params:
         evalue_cutoff={evalue_cutoff}
     conda: "{path}/envs/anomaly"
+    benchmark:
+        "{working_directory}/filtered/{{sample}}.blast.benchmark.txt"
     shell:
         '''
         bash \"{current_path}/Scripts/blast_run.sh\" {{input.fasta_file}} {{output}} {{threads}} {{input.ref_list}} {{params.evalue_cutoff}}
@@ -230,6 +242,9 @@ rule inserts_numt_concat:
 
     params:
         coverage_cutoff={coverage_cutoff}
+    
+    benchmark:
+        "{working_directory}/NUMTs/{{sample}}.numt_concatenation.benchmark.txt"
 
     shell:
         '''
@@ -254,6 +269,8 @@ rule get_supplementary_alignments:
     
     output:'{working_directory}/SA_Data/{{sample}}_MT_SA.bam'
     threads: {threads}
+    benchmark:
+        "{working_directory}/SA_Data/{{sample}}.supplementary_alignment.benchmark.txt"
     shell:
         '''
         bash \"{current_path}/Scripts/get_supplementary_alignments.sh\" {{input.main_bam}} {{output}} {{threads}} {{input.ref_headers}}
@@ -268,6 +285,8 @@ rule get_supplementary_alignments:
     
     output:"{working_directory}/SA_Data/{{sample}}_MT_SA.bam"
     threads: {threads}
+    benchmark:
+        "{working_directory}/SA_Data/{{sample}}.supplementary_alignment.benchmark.txt"
     shell:
         '''
         bash \"{current_path}/Scripts/get_supplementary_alignments.sh\" {{input.main_bam}} {{output}} {{threads}} {{input.ref_headers}}
@@ -289,6 +308,8 @@ rule potential_numts_from_sa:
     threads: {threads}
     params:
         read_cutoff={supporting_reads}
+    benchmark:
+        "{working_directory}/filtered/{{sample}}.get_numts_from_sa.benchmark.txt"
     shell:
         '''
         bash \"{current_path}/Scripts/get_potential_numts_from_sa.sh\" {{input.data}} {{output.sa_calls}} {{output.potential_numts}} {{threads}} {{params.read_cutoff}}
@@ -306,6 +327,9 @@ rule final_numts_from_sa:
 
     output: "{working_directory}/NUMTs/{{sample}}_final_numts_from_sa.txt"
 
+    benchmark:
+        "{working_directory}/NUMTs/{{sample}}.final_numts_from_sa.benchmark.txt"
+
     shell:
         '''
         bash \"{current_path}/Scripts/get_final_numts_from_sa.sh\" {{input.sa_calls}} {{output}} {{input.potential_numts}}
@@ -322,6 +346,9 @@ rule remove_duplicate_numts:
         ins_numt="{working_directory}/NUMTs/{{sample}}_concatenated_numts.txt"
 
     output: "{working_directory}/Results/{{sample}}_final_numts.txt"
+
+    benchmark:
+        "{working_directory}/Results/{{sample}}.remove_duplicates.benchmark.txt"
 
     shell:
         '''
@@ -343,6 +370,8 @@ rule visualize_numts:
     output:
         svg_out="{working_directory}/Results/{{sample}}_numt_circos_plot.svg",
         png_out="{working_directory}/Results/{{sample}}_numt_circos_plot.png"
+    benchmark:
+        "{working_directory}/Results/{{sample}}.ciros_plot.benchmark.txt"
 
     shell:
         '''
@@ -367,6 +396,9 @@ rule combined_circos_numts:
         png_out="{working_directory}/Results/cohort_numt_circos_plot.png"
     
     conda: "{path}/envs/anomaly"
+
+    benchmark:
+        "{working_directory}/Results/cohort.circos_plot.benchmark.txt"
     
     shell:
         '''
