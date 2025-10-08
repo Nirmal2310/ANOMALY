@@ -2,26 +2,19 @@ import yaml
 import subprocess
 import os
 import argparse
-# Directories to make:
-    
-# Load the config.yml file
+
 def load_config(config_path):
 	new_path=os.path.abspath(config_path)
 	with open(new_path, 'r') as file:
 		config = yaml.safe_load(file)
-        # Config file integrity check commands needed
 	return config
-# get the conda path
 
-path = subprocess.Popen(['which', 'conda'], stdout=subprocess.PIPE).communicate()[0].decode('utf-8').strip()
-
-path = path.replace('/condabin/conda', '')
-
-# get the current path 
+path=subprocess.run("conda info --envs | grep 'anomaly' | awk '{print $2}'", \
+                    shell=True, stdout=subprocess.PIPE, encoding='utf-8')\
+                    .stdout.strip()
 
 current_path=os.path.abspath(os.getcwd())
 
-# Function to generate shell script based on config file
 def generate_alignment_shell_script(config):
     alignment_mode = config.get("read_type", "None")
     reference_file = config.get("reference_nuclear", "ref.fa")
@@ -55,7 +48,6 @@ def generate_alignment_shell_script(config):
     return shell_script
     
 def generate_sniffle_shell_script(config):
-    # Extract config parameters with defaults
     min_support = config.get("min_support", None)
     minsvlen = config.get("minimum_numt_length", None)
     minimum_mapq = config.get("minimum_mapq")
@@ -66,7 +58,6 @@ def generate_sniffle_shell_script(config):
     threads_sniffles = config.get("threads_sniffles", 16)
     threads = threads_sniffles if threads_sniffles else config.get("threads", 16)
     min_support = min_support if min_support else config.get("min_support", None)
-    # Collect command-line arguments
     param_string = []
 
     if min_support != None:
@@ -90,16 +81,14 @@ def generate_sniffle_shell_script(config):
     if allow_overwrite:
         param_string.append("--allow-overwrite")
 
-    # Join parameters
     parameters = " ".join(param_string)
 
-    # Create basic command
     basic_command = f"sniffles --threads {threads} {parameters} --input {{input}} --vcf {{output}} > {{log}} 2>&1"
 
     return basic_command
 
 
-# Function to generate the Snakemake rule
+
 def generate_snakemake_rule_alignment(config):
     alignment_shell_script = generate_alignment_shell_script(config)
     sample_folder = config.get("sample_directory")
@@ -110,8 +99,7 @@ rule alignment:
         "{sample_folder}/{{sample}}.fastq.gz"
     output:
         "{working_directory}/bam_files/{{sample}}.bam"
-    conda:
-        "{path}/envs/anomaly"
+    conda: "{path}"
     resources: 
         mem_mb=180000
     benchmark:
@@ -137,7 +125,7 @@ rule sniffles:
     input:"{sample_folder}/{{sample}}.bam"
     output:"{working_directory}/vcf_files/{{sample}}_sniffles.vcf.gz"
     log:"{working_directory}/vcf_files/{{sample}}_sniffles.log"
-    conda:"{path}/envs/anomaly"
+    conda: "{path}"
     threads: {threads}
     resources: mem_mb=180000
     benchmark:
@@ -154,7 +142,7 @@ rule sniffles:
     input:"{working_directory}/bam_files/{{sample}}.bam"
     output:"{working_directory}/vcf_files/{{sample}}_sniffles.vcf.gz"
     log:"{working_directory}/vcf_files/{{sample}}_sniffles.log"
-    conda:"{path}/envs/anomaly"
+    conda: "{path}"
     threads: {threads}
     resources: mem_mb=180000
     benchmark:
@@ -218,7 +206,7 @@ rule inserts_blast:
     threads: {threads}
     params:
         evalue_cutoff={evalue_cutoff}
-    conda: "{path}/envs/anomaly"
+    conda: "{path}"
     benchmark:
         "{working_directory}/filtered/{{sample}}.blast.benchmark.txt"
     shell:
@@ -238,7 +226,7 @@ rule inserts_numt_concat:
 
     output:'{working_directory}/NUMTs/{{sample}}_concatenated_numts.txt'
 
-    conda: "{path}/envs/anomaly"
+    conda: "{path}"
 
     params:
         coverage_cutoff={coverage_cutoff}
@@ -395,7 +383,7 @@ rule combined_circos_numts:
         svg_out="{working_directory}/Results/cohort_numt_circos_plot.svg",
         png_out="{working_directory}/Results/cohort_numt_circos_plot.png"
     
-    conda: "{path}/envs/anomaly"
+    conda: "{path}"
 
     benchmark:
         "{working_directory}/Results/cohort.circos_plot.benchmark.txt"
@@ -412,12 +400,10 @@ def generate_snakemake_rule_all(config,config_path):
     sample_folder = config.get("sample_directory")
     working_directory = config.get("working_directory")
     new_path = os.path.abspath(config_path)
-    # Ensure sample_directory is provided
     if sample_folder is None:
         raise ValueError("The 'sample_directory' key must be specified in the config.")
 
     if file_type == "b":
-        # BAM file processing
         rule_all = f"""
 import os
 import glob
@@ -484,15 +470,14 @@ rule all:
 
     return rule_all
      
-# Function to write Snakemake rule to Snakefile
+
 def write_snakefile(rule, snakefile_path):
     with open(snakefile_path, "w") as snakefile:
         snakefile.write(rule)
 
-# Function to run Snakemake
+
 def run_snakemake(snakefile_path="Snakefile", config_path="config.yml"):
     try:
-        # Running snakemake using subprocess
         subprocess.run(["snakemake", "-s", snakefile_path, "--configfile", config_path], check=True)
     except subprocess.CalledProcessError as e:
         print(f"Snakemake failed: {e}")
@@ -507,7 +492,6 @@ def main():
     required=True,
     help="Absolute Path to the configuration YAML file. (Working Directory + snake_config.yml)"
     )
-    # Parse the arguments
     args = parser.parse_args()
     config_path = args.config
     config = load_config(config_path)
@@ -523,8 +507,7 @@ def main():
         if not os.path.exists(folder):
             os.makedirs(folder)
             print(f"Directory '{folder}' created.")
-
-    # Generate Snakemake rule
+    
     rule_alignment = generate_snakemake_rule_alignment(config)
     rule_alignment_path = os.path.join(working_directory,"alignment.smk")
     write_snakefile(rule_alignment,snakefile_path=rule_alignment_path)
