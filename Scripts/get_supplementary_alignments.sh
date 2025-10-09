@@ -12,7 +12,7 @@ path=$(conda info --base)
 
 source $path/bin/activate anomaly
 
-sambamba view -t $threads -F "supplementary" $bam_file | \
+sambamba view -t $threads $bam_file | \
     rg -j $threads -P 'SA:Z:(?:[^;]*;)*MT,' | \
     awk -v ref_list="$chr_list" '
     BEGIN {
