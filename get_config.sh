@@ -107,6 +107,9 @@ ref_full=$(realpath "$ref")
 
 ref_list_full=$(realpath "$ref_list")
 
+if [ ! -d "$workdir" ]; then
+	mkdir "$workdir"
+fi
 
 cat > $workdir_path/snake_config.yml <<EOF
 # Config file for the pipeline
