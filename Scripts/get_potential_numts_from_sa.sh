@@ -6,22 +6,31 @@
 set -euo pipefail
 
 # Input validation
-if [ "$#" -ne 5 ]; then
-    echo "Usage: $0 <input_bam> <intermediate_output> <final_output> <threads> <supporting_reads>"
+if [ "$#" -ne 6 ]; then
+    echo "Usage: $0 <input_nuclear_bam> <input_mt_bam> <intermediate_output> <final_output> <threads> <supporting_reads>"
     exit 1
 fi
 
 # Input parameters
-BAM_FILE="$1"
-OUT_FILE="$2"
-TARGET_FILE="$3"
-THREADS="$4"
-SUPPORTING_READS="$5"
+NUCL_BAM_FILE="$1"
+MT_BAM_FILE="$2"
+OUT_FILE="$3"
+TARGET_FILE="$4"
+THREADS="$5"
+SUPPORTING_READS="$6"
+
+nucl_tmp_file=$(mktemp)
+
+mt_tmp_file=$(mktemp)
 
 # Conda environment setup
 CONDA_BASE=$(conda info --base)
 
 source "${CONDA_BASE}/bin/activate" anomaly
+
+script_dir=$(dirname "$(readlink -f "$0")")
+
+script_dir_full=$(realpath "$script_dir")
 
 # Function to process CIGAR strings
 process_cigar() {
@@ -64,10 +73,10 @@ extract_values() {
 
 # Main processing pipeline
 
-num_line=$(sambamba view "$BAM_FILE" | wc -l)
+num_line=$(sambamba view "$NUCL_BAM_FILE" | wc -l)
 
 if [ "$num_line" -gt 2 ]; then
-    sambamba view -t "$THREADS" "$BAM_FILE" \
+    sambamba view -t "$THREADS" "$NUCL_BAM_FILE" \
         | awk 'BEGIN {FS=OFS="\t"} {
             for (i=1; i<=NF; i++) {
                 if ($i ~ /SA:Z:/) print $1, $3, $4, $i
@@ -87,7 +96,11 @@ if [ "$num_line" -gt 2 ]; then
         | sed 's/ /\t/g' \
         | process_cigar \
         | extract_values \
-        > "$OUT_FILE"
+        > "$nucl_tmp_file"
+
+    python "$script_dir_full"/get_nucl_coord.py -i "$MT_BAM_FILE" -o "$mt_tmp_file"
+
+    cat "$nucl_tmp_file" "$mt_tmp_file" | sort -k1 -n > "$OUT_FILE" && rm -r "$nucl_tmp_file" "$mt_tmp_file"
 
     awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$2,$3,$4}' "$OUT_FILE" | sort -k1 -n | uniq | sortBed \
         | bedtools merge -d 50 -i stdin -c 4 -o count \

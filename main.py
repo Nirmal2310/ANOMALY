@@ -255,13 +255,15 @@ rule get_supplementary_alignments:
         main_bam="{sample_directory}/{{sample}}.bam",
         ref_headers="{headers_file}"
     
-    output:'{working_directory}/SA_Data/{{sample}}_MT_SA.bam'
+    output:
+        chr_bam='{working_directory}/SA_Data/{{sample}}_MT_SA_nuclear.bam',
+        mt_bam='{working_directory}/SA_Data/{{sample}}_MT_SA_mt.bam'
     threads: {threads}
     benchmark:
         "{working_directory}/SA_Data/{{sample}}.supplementary_alignment.benchmark.txt"
     shell:
         '''
-        bash \"{current_path}/Scripts/get_supplementary_alignments.sh\" {{input.main_bam}} {{output}} {{threads}} {{input.ref_headers}}
+        bash \"{current_path}/Scripts/get_supplementary_alignments.sh\" {{input.main_bam}} {{output.chr_bam}} {{output.mt_bam}} {{threads}} {{input.ref_headers}}
         '''
     """
     if bam_or_fastq == 'f':
@@ -271,13 +273,15 @@ rule get_supplementary_alignments:
         main_bam="{working_directory}/bam_files/{{sample}}.bam",
         ref_headers="{headers_file}"
     
-    output:"{working_directory}/SA_Data/{{sample}}_MT_SA.bam"
+    output:
+        chr_bam='{working_directory}/SA_Data/{{sample}}_MT_SA_nuclear.bam',
+        mt_bam='{working_directory}/SA_Data/{{sample}}_MT_SA_mt.bam'
     threads: {threads}
     benchmark:
         "{working_directory}/SA_Data/{{sample}}.supplementary_alignment.benchmark.txt"
     shell:
         '''
-        bash \"{current_path}/Scripts/get_supplementary_alignments.sh\" {{input.main_bam}} {{output}} {{threads}} {{input.ref_headers}}
+        bash \"{current_path}/Scripts/get_supplementary_alignments.sh\" {{input.main_bam}} {{output.chr_bam}} {{output.mt_bam}} {{threads}} {{input.ref_headers}}
         '''
     """
     return rule_get_supplementary_alignments
@@ -289,7 +293,8 @@ def generate_snakemake_rule_potential_numts_from_sa(config):
     rule_potential_numts_from_sa = f"""
 rule potential_numts_from_sa:
     input: 
-        data="{working_directory}/SA_Data/{{sample}}_MT_SA.bam",
+        nucl_data="{working_directory}/SA_Data/{{sample}}_MT_SA_nuclear.bam",
+        mt_data="{working_directory}/SA_Data/{{sample}}_MT_SA_mt.bam"
     output: 
         sa_calls="{working_directory}/filtered/{{sample}}_MT_SA_calls.txt",
         potential_numts="{working_directory}/filtered/{{sample}}_potential_numts_from_sa.txt"
@@ -300,7 +305,7 @@ rule potential_numts_from_sa:
         "{working_directory}/filtered/{{sample}}.get_numts_from_sa.benchmark.txt"
     shell:
         '''
-        bash \"{current_path}/Scripts/get_potential_numts_from_sa.sh\" {{input.data}} {{output.sa_calls}} {{output.potential_numts}} {{threads}} {{params.read_cutoff}}
+        bash \"{current_path}/Scripts/get_potential_numts_from_sa.sh\" {{input.nucl_data}} {{input.mt_data}} {{output.sa_calls}} {{output.potential_numts}} {{threads}} {{params.read_cutoff}}
         '''
     """
     return rule_potential_numts_from_sa
