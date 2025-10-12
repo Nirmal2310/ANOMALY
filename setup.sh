@@ -68,6 +68,12 @@ else
 
 fi
 
+source $path/bin/activate anomaly
+
+pip install pandas
+
+source $path/bin/activate base
+
 ## Creating the BLASTn Index For Mitochondrial Genome
 
 if [ ! -d "$data_dir" ]; then
@@ -76,7 +82,7 @@ if [ ! -d "$data_dir" ]; then
 
 	wget https://www.ebi.ac.uk/ena/browser/api/fasta/CP068254.1 -O "$data_dir"/Homo_sapiens.CHM13.MT.fasta
 
- 	source $path/bin/activate blast
+ 	source $path/bin/activate anomaly
 
   	seqkit concat -w 0 -t DNA "$data_dir"/Homo_sapiens.CHM13.MT.fasta "$data_dir"/Homo_sapiens.CHM13.MT.fasta > "$data_dir"/Homo_sapiens.CHM13.MT_concatenated.fasta
 
