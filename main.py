@@ -158,6 +158,7 @@ rule sniffles:
 def generate_snakemake_rule_inserts(config):
     working_directory = config.get("working_directory")
     headers_file = config.get("headers_nuclear", "chr_headers.txt")
+    threads = config.get("threads_sniffles", 16)
     rule_inserts = f""" 
 rule inserts:
     input:
@@ -167,9 +168,10 @@ rule inserts:
         '{working_directory}/inserts/{{sample}}_insertions.txt'
     benchmark:
         "{working_directory}/inserts/{{sample}}.get_inserts.benchmark.txt"
+    threads: {threads}
     shell:
         \"\"\"
-        bash \"{current_path}/Scripts/get_insertion_calls.sh\" {{input.vcf_file}} {{output}} {{input.ref_list}}
+        bash \"{current_path}/Scripts/get_insertion_calls.sh\" -i {{input.vcf_file}} -o {{output}} -r {{input.ref_list}} -t {{threads}}
         \"\"\"
     """
     return rule_inserts
