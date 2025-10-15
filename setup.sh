@@ -68,12 +68,6 @@ else
 
 fi
 
-source $path/bin/activate anomaly
-
-pip install pandas
-
-source $path/bin/activate base
-
 ## Creating the BLASTn Index For Mitochondrial Genome
 
 if [ ! -d "$data_dir" ]; then
