@@ -11,7 +11,7 @@ helpFunction()
    echo -e "\t-i <path> Absolute Path containing the FASTQ or BAM Files."
    echo -e "\t-o <path> Absolute Path for Pipeline Output and Intermediate Files."
    echo -e "\t-l <path> Absolute Path for the list containing chromosome reference headers."
-   echo -e "\t-q <int> Minimum Map Quality for calling SVs. [default: 0]"
+   echo -e "\t-q <int> Minimum Map Quality for calling SVs. [default: 1]"
    echo -e "\t-n <int> Minimum Support for calling SVs. [default: 4]"
    echo -e "\t-g <int> Genotype Ploidy. [default: 2]"
    echo -e "\t-e <int> Blast E-value Cutoff. [default: 1e-3]"
