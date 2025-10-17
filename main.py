@@ -298,7 +298,7 @@ rule potential_numts_from_sa:
         potential_numts="{working_directory}/filtered/{{sample}}_potential_numts_from_sa.txt"
     threads: {threads}
     params:
-        read_cutoff={supporting_reads}
+        read_cutoff={supporting_reads},
         len_cutoff={long_ins_length}
     benchmark:
         "{working_directory}/filtered/{{sample}}.get_numts_from_sa.benchmark.txt"
