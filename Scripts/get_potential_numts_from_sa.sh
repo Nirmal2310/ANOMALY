@@ -6,8 +6,8 @@
 set -euo pipefail
 
 # Input validation
-if [ "$#" -ne 5 ]; then
-    echo "Usage: $0 <input_bam> <intermediate_output> <final_output> <threads> <supporting_reads>"
+if [ "$#" -ne 6 ]; then
+    echo "Usage: $0 <input_bam> <intermediate_output> <final_output> <threads> <supporting_reads> <len_cutoff>"
     exit 1
 fi
 
@@ -17,6 +17,7 @@ OUT_FILE="$2"
 TARGET_FILE="$3"
 THREADS="$4"
 SUPPORTING_READS="$5"
+LEN_CUTOFF="$6"
 
 # Conda environment setup
 CONDA_BASE=$(conda info --base)
@@ -58,7 +59,7 @@ extract_values() {
         }
         sub("M", "", match_cigar)
         sub("D", "", del_cigar)
-        print $2, $3 - 1, $3, $1, $4, $5, $5 + match_cigar + del_cigar
+        print $2, $3 - 1, $3, $1, $4, $5, $5 + match_cigar + del_cigar, match_cigar + del_cigar
     }'
 }
 
@@ -87,10 +88,10 @@ if [ "$num_line" -gt 2 ]; then
         | sed 's/ /\t/g' \
         | process_cigar \
         | extract_values \
-        > "$OUT_FILE"
+        | awk -v len_cutoff="$LEN_CUTOFF" 'BEGIN{FS=OFS="\t"}{if($8>=len_cutoff) print $1,$2,$3,$4,$5,$6,$7}' > "$OUT_FILE"
 
     awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$2,$3,$4}' "$OUT_FILE" | sort -k1 -n | uniq | sortBed \
-    | bedtools merge -d 50 -i stdin -c 4 -o count \
+    | bedtools merge -d 100 -i stdin -c 4 -o count \
     | awk -v read_cutoff="$SUPPORTING_READS" 'BEGIN {FS=OFS="\t"} {if ($4 >= read_cutoff) print $1, $2, $3}' \
     > "$TARGET_FILE"
 

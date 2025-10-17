@@ -33,15 +33,19 @@ if [ -s "$ins_numt" ] || [ -s "$sa_numt" ]; then
     cat "$ins_numt" "$sa_numt" | sortBed \
     | awk 'BEGIN{FS="\t";OFS="\t"} {
        if($7=="With Control") {
-          print $0 | "bedtools merge -i stdin -d 50 -c 2,3,4,5,6,7 -o max,min,distinct,max,min,distinct"
+          print $0 | "bedtools merge -i stdin -d 100 -c 2,3,4,5,6,7 -o max,min,distinct,max,min,distinct"
        } else if($7=="Without Control") {
-          print $0 | "bedtools merge -i stdin -d 50 -c 2,3,4,5,6,7 -o max,min,distinct,min,max,distinct"
+          print $0 | "bedtools merge -i stdin -d 100 -c 2,3,4,5,6,7 -o max,min,distinct,min,max,distinct"
+       } else if($7=="Concatenated NUMT") {
+          print $1,$2,$3,$2,$3,$4,$5,$6,$7
        }}' \
     | awk 'BEGIN{FS=OFS="\t"} {
         if($9=="Without Control") {
             print $1,$4+1,$6,$7,$8,$8-$7
-        } else {
+        } else if ($9=="Control") {
             print $1,$4+1,$6,$7,$8,(16569+$7)-$8
+        } else {
+            print $1,$4+1,$6,$7,$8,$8-$7
         }
     }' | sort -k1 -n > "$final_out"
 elif [ -s "$ins_numt" ]; then

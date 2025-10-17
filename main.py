@@ -287,6 +287,7 @@ rule get_supplementary_alignments:
 def generate_snakemake_rule_potential_numts_from_sa(config):
     working_directory = config.get("working_directory")
     threads = config.get("threads_sniffles",16)
+    long_ins_length = config.get("long_ins_length", 2500)
     supporting_reads = config.get("numt_supporting_reads")
     rule_potential_numts_from_sa = f"""
 rule potential_numts_from_sa:
@@ -298,11 +299,12 @@ rule potential_numts_from_sa:
     threads: {threads}
     params:
         read_cutoff={supporting_reads}
+        len_cutoff={long_ins_length}
     benchmark:
         "{working_directory}/filtered/{{sample}}.get_numts_from_sa.benchmark.txt"
     shell:
         '''
-        bash \"{current_path}/Scripts/get_potential_numts_from_sa.sh\" {{input.data}} {{output.sa_calls}} {{output.potential_numts}} {{threads}} {{params.read_cutoff}}
+        bash \"{current_path}/Scripts/get_potential_numts_from_sa.sh\" {{input.data}} {{output.sa_calls}} {{output.potential_numts}} {{threads}} {{params.read_cutoff}} {{len_cutoff}}
         '''
     """
     return rule_potential_numts_from_sa
