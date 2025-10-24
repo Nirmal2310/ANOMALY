@@ -123,7 +123,7 @@ sample_directory: $sampledir_path  # Directory containing sample files
 working_directory: $workdir_path  # Directory for pipeline output and intermediate files
 
 # Sniffles parameters
-minimum_numt_length: 15
+minimum_numt_length: 24
 min_support: $mins
 minimum_mapq: $minq
 long_ins_length: 2500
