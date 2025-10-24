@@ -61,7 +61,7 @@ bash get_config.sh [-d b] [-r /path/to/reference/fasta] [-m 16] [-s 16] [-p ONT]
 -i: Absolute/Relative path of the directory that contains the FASTQ or BAM Files [Do not pass the FASTQ name].
 -o: Absolute/Relative path of the directory for Pipeline Output and Intermediate Files.
 -l: Absolute/Relative path of the file containing reference chromosome headers. [Default: ref_headers.txt]
--q: Minimum Map Quality for calling SVs. [default: 0]
+-q: Minimum Map Quality for calling SVs. [default: 1]
 -n: Minimum Support for calling SVs. [default: 4]
 -g: Genotype Ploidy. [default: 2]
 -e: Blast E-value Cutoff. [default: 1e-3]
