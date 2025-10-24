@@ -93,7 +93,7 @@ if [ "$num_line" -gt 2 ]; then
     awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$2,$3,$4}' "$OUT_FILE" | sort -k1 -n | uniq | sortBed \
     | bedtools merge -d 100 -i stdin -c 4 -o count \
     | awk -v read_cutoff="$SUPPORTING_READS" 'BEGIN {FS=OFS="\t"} {if ($4 >= read_cutoff) print $1, $2, $3}' \
-    > "$TARGET_FILE"
+    | sortBed | bedtools merge -d 500 -i stdin > "$TARGET_FILE"
 
     echo "Processing complete. Results written to $TARGET_FILE"
 else
