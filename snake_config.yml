@@ -12,8 +12,8 @@ working_directory: ""  # Directory for pipeline output and intermediate files
 # Sniffles parameters
 minimum_numt_length: 24
 min_support: 5
-minimum_mapq: 0
-long_ins_length:
+minimum_mapq: 1
+long_ins_length: 2500
 genotype_ploidy: 2
 quiet: True
 allow_overwrite: True
