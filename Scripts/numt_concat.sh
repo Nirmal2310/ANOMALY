@@ -130,8 +130,6 @@ process_concatenated_numts() {
 
     awk 'BEGIN{FS="\t";OFS="\t"}{print $4, $5, $6}' "$in" | sortBed | bedtools merge -i stdin -d 100 > "$mt_tmp_file"
 
-    cat "$mt_tmp_file"
-
     line_count=$(cat "$mt_tmp_file" | wc -l)
 
     if [ "$line_count" -eq 1 ]; then 
@@ -144,9 +142,9 @@ process_concatenated_numts() {
             if($2 < chr_min || NR==1) chr_min = $2
             if($3 < chr_max || NR==1) chr_max = $3
             if($7 > query_max || NR==1) query_max = $7
-            ref_sum += $8
+            if($8 > ref_max || NR==1) ref_max = $8
         } END {
-            print $1, chr_min, chr_max,$4, mt_start, mt_end, query_max, ref_sum
+            print $1, chr_min, chr_max,$4, mt_start, mt_end, query_max, ref_max
         }' "$in"
     else 
         while IFS=$'\t' read -r mt mt_start mt_end; do
@@ -157,7 +155,7 @@ process_concatenated_numts() {
                 if($2 < chr_min || NR==1) chr_min = $2
                 if($3 < chr_max || NR==1) chr_max = $3
                 if($7 > query_max || NR==1) query_max = $7
-                ref_sum +=$8
+                ref_sum += $8
             } END {
                 print $1, chr_min, chr_max, $4, mt_start, mt_end, query_max, ref_sum
             }' "$in"
