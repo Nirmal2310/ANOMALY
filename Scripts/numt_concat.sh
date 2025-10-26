@@ -290,7 +290,7 @@ if [ -s "$input" ]; then
         if(($8*100)/$7 >= coverage_cutoff) print $1,$2,$3,$4,$5,$6
     }' | awk -v mt_len="$mt_length" 'BEGIN{FS=OFS="\t"} {
         if($6>mt_len) {
-            print $1, $2, $3, $4, $5, $6-mt_len, "With Control"
+            print $1, $2, $3, $4, $5, $6-mt_len, "Control"
         }
         else {
             print $0, "Without Control"
