@@ -42,7 +42,7 @@ if [ -s "$ins_numt" ] || [ -s "$sa_numt" ]; then
     | awk 'BEGIN{FS=OFS="\t"} {
         if($9=="Without Control") {
             print $1,$4+1,$6,$7,$8,$8-$7
-        } else if ($9=="Control") {
+        } else if ($9=="With Control") {
             print $1,$4+1,$6,$7,$8,(16569+$7)-$8
         } else {
             print $1,$4+1,$6,$7,$8,$8-$7
