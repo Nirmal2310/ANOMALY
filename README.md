@@ -91,11 +91,14 @@ bash run_snakemake.sh -w /path/to/working/directory -t 96
 
 | CHROMOSOME | POSITION | MT GENOME HEADER | MT START | MT END | LENGTH |
 | :--------: | :------- | :--------------: | :------- | :----- | :----- |
-| 21         | 21708210 | MT               | 5714     | 5792   | 78     |
-| 9          | 129767   | MT               | 6226     | 6328   | 102    |
-| 14         | 9291018  | MT               | 359      | 16337  | 591    |
-| 20         | 53287942 | MT               | 407      | 16150  | 826    |
-| 22         | 16645247 | MT               | 350      | 16414  | 505    |
+| 22         | 10669630 | MT               | 318      | 391    | 74     |
+| 22         | 16645321 | MT               | 354      | 16414  | 510    |
+| 22         | 27052372 | MT               | 8672     | 8797   | 126    |
+| 22         | 32722334 | MT               | 3951     | 8331   | 4381   |
+| 22         | 43340044 | MT               | 10795    | 10908  | 114    |
+| 22         | 50408296 | MT               | 13056    | 14429  | 1374   |
+
+This is the expected output after running ANOMALY on the test dataset. The test dataset was simulated using chromosome 22 of the CHM13 reference genome.
 
 ## Output NUMT Circos Plot
 ![numt_circos_plot](./NUMT_Circos_Example.png)
