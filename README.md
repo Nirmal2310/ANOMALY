@@ -119,7 +119,7 @@ bash path/to/tool/Scripts/prepare_genome_fasta.sh /path/to/mitochondrial/genome/
 4. The $MT_DATA variable in the ~/.bashrc represents the path of the modified reference genome and blast indices. Please modify this variable accordingly if any changes are required.
 
 ## Pipeline Overview:
-![pipeline_figure](./ANOMALY-Pipeline.png)
+![pipeline_figure](./ANOMALY-Pipeline-Downsample.png)
 
 **ANOMALY Workflow:** The workflow is implemented as a Snakemake pipeline designed to detect NuMTs. It accepts raw sequencing data in FASTQ format or pre-aligned data in BAM format as input. The pipeline produces a TSV file containing NuMT calls and visual representations as a Circos plot, saved in PNG and SVG formats. In the schematic representation, the open-source tools used in the pipeline are highlighted in purple. The steps are described along the arrows connecting the workflow components. Outputs of each step are indicated within circles.
 
