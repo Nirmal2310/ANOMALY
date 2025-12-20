@@ -304,7 +304,7 @@ rule potential_numts_from_sa:
         "{working_directory}/filtered/{{sample}}.get_numts_from_sa.benchmark.txt"
     shell:
         '''
-        bash \"{current_path}/Scripts/get_potential_numts_from_sa.sh\" {{input.data}} {{output.sa_calls}} {{output.potential_numts}} {{threads}} {{params.read_cutoff}} {{len_cutoff}}
+        bash \"{current_path}/Scripts/get_potential_numts_from_sa.sh\" {{input.data}} {{output.sa_calls}} {{output.potential_numts}} {{threads}} {{params.read_cutoff}} {{params.len_cutoff}}
         '''
     """
     return rule_potential_numts_from_sa
