@@ -273,7 +273,7 @@ rule get_supplementary_alignments:
         main_bam="{working_directory}/bam_files/{{sample}}.bam",
         ref_headers="{headers_file}"
     
-    output:'{working_directory}/SA_Data/{{sample}}_MT_SA_nuclear.bam'
+    output:'{working_directory}/SA_Data/{{sample}}_MT_SA.bam'
     threads: {threads}
     benchmark:
         "{working_directory}/SA_Data/{{sample}}.supplementary_alignment.benchmark.txt"
