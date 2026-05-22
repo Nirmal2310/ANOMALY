@@ -123,6 +123,10 @@ bash path/to/tool/Scripts/prepare_genome_fasta.sh /path/to/mitochondrial/genome/
 
 **ANOMALY Workflow:** The workflow is implemented as a Snakemake pipeline designed to detect NuMTs. It accepts raw sequencing data in FASTQ format or pre-aligned data in BAM format as input. The pipeline produces a TSV file containing NuMT calls and visual representations as a Circos plot, saved in PNG and SVG formats. In the schematic representation, the open-source tools used in the pipeline are highlighted in purple. The steps are described along the arrows connecting the workflow components. Outputs of each step are indicated within circles.
 
+## Citing ANOMALY
+
+If you use ANOMALY in your research, please cite our paper: [ANOMALY](https://doi.org/10.1093/nargab/lqag014)
+
 ## Feedback/Help
 
 If you have any feedback/issues, please report the issue via [GitHub](https://github.com/Nirmal2310/ANOMALY/issues).
